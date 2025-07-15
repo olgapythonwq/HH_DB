@@ -27,9 +27,8 @@
 ## <a id="title1">Использование</a>
 
 ### Классы:
-Создан класс:
-- ConnectAPI(ABC). Абстрактный базовый класс для подключения к API сервиса с вакансиями. Обязывает реализовать метод получения вакансий.
-- HeadHunterAPI(ConnectAPI). Класс для получения вакансий с сайта hh.ru
+Созданы классы:
+- HeadHunterAPI. Класс для получения вакансий с сайта hh.ru
 - DBManager. Класс для работы с данными в БД.
 - 
 
@@ -46,16 +45,31 @@
 #### Примеры использования функций:
 
 ```python
-def 
+def load_employer_ids(filename: str = "employers.txt") -> List[int]:
+    """Формирует список id работодателей из txt-файла"""
+    filepath = os.path.join(DATA_DIR, filename)
+    try:
+        with open(filepath, 'r', encoding='utf-8') as file:
+            employers_list = [
+                int(line.strip())
+                for line in file
+                if line.strip() and not line.startswith("#")  # Можно добавить названия работодателей
+            ]
+        logger.info(f"Загружено {len(employers_list)} employer_id из {filename}")
+        return employers_list
+    except FileNotFoundError:
+        logger.error(f"Файл {filepath} не найден.")
+        return []
+    except ValueError as e:
+        logger.exception(f"Ошибка в формате ID в {filepath}: {e}")
+        return []
 
 ```
 ## <a id="title1">Тестирование</a>
 
-Все тесты 
 
-Для запуска тестов выполните команду:
 ```bash
-pytest
+
 ```
 ## <a id="title1">Вклад</a>
 
